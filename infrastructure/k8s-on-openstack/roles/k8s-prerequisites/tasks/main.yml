@@ -1,0 +1,63 @@
+
+---
+
+# ============================================================
+
+# Role: k8s-prerequisites
+
+# Проверяет и устанавливает необходимые инструменты
+
+# ============================================================
+
+- name: Проверить наличие kubectl
+
+  command: kubectl version --client
+
+  register: kubectl_check
+
+  changed_when: false
+
+- name: Показать версию kubectl
+
+  debug:
+
+    msg: "{{ kubectl_check.stdout }}"
+
+- name: Проверить наличие docker
+
+  command: docker --version
+
+  register: docker_check
+
+  changed_when: false
+
+- name: Показать версию docker
+
+  debug:
+
+    msg: "{{ docker_check.stdout }}"
+
+- name: Проверить соединение с кластером
+
+  command: kubectl cluster-info
+
+  register: cluster_info
+
+  changed_when: false
+
+- name: Показать информацию о кластере
+
+  debug:
+
+    var: cluster_info.stdout_lines
+
+- name: Установить pip зависимости для kubernetes
+
+  pip:
+
+    name: kubernetes
+
+    extra_args: --user --break-system-packages
+
+    state: present
+

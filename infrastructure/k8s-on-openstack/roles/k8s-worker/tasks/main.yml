@@ -1,0 +1,119 @@
+
+---
+
+# ============================================================
+
+# Role: k8s-worker
+
+# В minikube worker ноды эмулируются через deployment
+
+# ============================================================
+
+- name: Создать тестовый deployment
+
+  kubernetes.core.k8s:
+
+    state: present
+
+    definition:
+
+      apiVersion: apps/v1
+
+      kind: Deployment
+
+      metadata:
+
+        name: nginx-demo
+
+        namespace: k8s-demo
+
+      spec:
+
+        replicas: 2
+
+        selector:
+
+          matchLabels:
+
+            app: nginx-demo
+
+        template:
+
+          metadata:
+
+            labels:
+
+              app: nginx-demo
+
+          spec:
+
+            containers:
+
+              - name: nginx
+
+                image: nginx:latest
+
+                ports:
+
+                  - containerPort: 80
+
+- name: Создать Service для deployment
+
+  kubernetes.core.k8s:
+
+    state: present
+
+    definition:
+
+      apiVersion: v1
+
+      kind: Service
+
+      metadata:
+
+        name: nginx-demo-service
+
+        namespace: k8s-demo
+
+      spec:
+
+        selector:
+
+          app: nginx-demo
+
+        ports:
+
+          - protocol: TCP
+
+            port: 80
+
+            targetPort: 80
+
+        type: NodePort
+
+- name: Подождать пока поды запустятся
+
+  command: >
+
+    kubectl rollout status deployment/nginx-demo
+
+    -n k8s-demo --timeout=300s
+
+  register: rollout_status
+
+  changed_when: false
+
+- name: Показать запущенные поды
+
+  command: kubectl get pods -n k8s-demo -o wide
+
+  register: pods_status
+
+  changed_when: false
+
+- name: Вывести поды
+
+  debug:
+
+    var: pods_status.stdout_lines
+

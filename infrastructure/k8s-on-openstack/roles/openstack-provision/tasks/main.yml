@@ -1,0 +1,65 @@
+
+---
+
+# ============================================================
+
+# Role: openstack-provision
+
+# В реальном окружении создаёт ресурсы в OpenStack.
+
+# В локальном окружении использует Minikube.
+
+# ============================================================
+
+- name: Проверить что minikube установлен
+
+  command: minikube version
+
+  register: minikube_version
+
+  changed_when: false
+
+- name: Показать версию minikube
+
+  debug:
+
+    msg: "{{ minikube_version.stdout }}"
+
+- name: Проверить статус minikube
+
+  command: minikube status
+
+  register: minikube_status
+
+  changed_when: false
+
+  ignore_errors: true
+
+- name: Запустить minikube если не запущен
+
+  command: >
+
+    minikube start
+
+    --driver={{ minikube_driver }}
+
+    --cpus={{ minikube_cpus }}
+
+    --memory={{ minikube_memory }}
+
+  when: "'Running' not in minikube_status.stdout"
+
+- name: Показать статус кластера
+
+  command: minikube status
+
+  register: final_status
+
+  changed_when: false
+
+- name: Вывести статус
+
+  debug:
+
+    var: final_status.stdout_lines
+

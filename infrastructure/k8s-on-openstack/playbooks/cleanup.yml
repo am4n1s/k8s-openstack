@@ -1,0 +1,67 @@
+
+---
+
+# ============================================================
+
+# Playbook: cleanup.yml
+
+# Удаляет все созданные ресурсы
+
+# ============================================================
+
+- name: Очистка кластера
+
+  hosts: masters
+
+  gather_facts: false
+
+  tasks:
+
+    - name: Удалить deployment nginx-demo
+
+      kubernetes.core.k8s:
+
+        name: nginx-demo
+
+        namespace: k8s-demo
+
+        kind: Deployment
+
+        state: absent
+
+    - name: Удалить service nginx-demo
+
+      kubernetes.core.k8s:
+
+        name: nginx-demo-service
+
+        namespace: k8s-demo
+
+        kind: Service
+
+        state: absent
+
+    - name: Удалить namespace k8s-demo
+
+      kubernetes.core.k8s:
+
+        name: k8s-demo
+
+        api_version: v1
+
+        kind: Namespace
+
+        state: absent
+
+    - name: Остановить minikube
+
+      command: minikube stop
+
+      changed_when: false
+
+    - name: Очистка завершена
+
+      debug:
+
+        msg: "Все ресурсы удалены!"
+
