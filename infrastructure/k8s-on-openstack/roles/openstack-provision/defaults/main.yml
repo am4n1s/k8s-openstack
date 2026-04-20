@@ -1,0 +1,4 @@
+---
+minikube_driver: "docker"
+minikube_cpus: 2
+minikube_memory: "3000mb"
