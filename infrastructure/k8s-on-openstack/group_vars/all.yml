@@ -1,55 +1,34 @@
-
 ---
-
 # ============================================================
-
 # OpenStack (для реального окружения)
-
 # ============================================================
-
 os_auth_url:        "http://localhost:5000/v3"
-
 os_username:        "admin"
-
 os_password:        "secret"
-
 os_project_name:    "demo"
 
 # ============================================================
-
 # Kubernetes
-
 # ============================================================
-
 k8s_version:        "1.35.1"
-
 k8s_pod_network_cidr: "10.244.0.0/16"
-
 cni_plugin:         "flannel"
 
 # ============================================================
-
 # Minikube (локальная среда)
-
 # ============================================================
-
 minikube_driver:    "docker"
-
 minikube_cpus:      2
-
-minikube_memory:    "3000mb"
+minikube_memory:    "3000"
+minikube_nodes:     3        # 1 master + 2 workers
+minikube_cni:       "flannel"
 
 # ============================================================
-
 # VM настройки (для реального OpenStack)
-
 # ============================================================
-
 master_flavor:      "m1.medium"
-
 worker_flavor:      "m1.small"
-
 vm_image:           "Ubuntu-22.04"
-
 ssh_key_name:       "k8s-keypair"
-
+master_count:       1
+worker_count:       2

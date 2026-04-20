@@ -14,17 +14,19 @@
   changed_when: false
   ignore_errors: true
 
-- name: Запустить minikube если остановлен или не запущен
+- name: Запустить minikube с flannel CNI и 3 нодами
   command: >
     minikube start
     --driver={{ minikube_driver }}
     --cpus={{ minikube_cpus }}
     --memory={{ minikube_memory }}
+    --cni={{ minikube_cni }}
+    --nodes={{ minikube_nodes }}
   when: "'Running' not in minikube_status.stdout"
   register: minikube_start
 
-- name: Подождать пока кластер будет готов
-  command: kubectl wait --for=condition=Ready node/minikube --timeout=120s
+- name: Подождать пока все ноды будут Ready
+  command: kubectl wait --for=condition=Ready nodes --all --timeout=180s
   when: minikube_start is changed
   changed_when: false
 
