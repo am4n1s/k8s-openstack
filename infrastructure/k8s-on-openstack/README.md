@@ -44,7 +44,7 @@ kubectl get pods -A
 ansible-playbook playbooks/cleanup.yml
 
 ## Структура проекта
-
+```
 k8s-on-openstack/
 ├── ansible.cfg
 ├── inventory/hosts.ini
@@ -58,7 +58,7 @@ k8s-on-openstack/
     ├── provision.yml
     ├── k8s-install.yml
     └── cleanup.yml
-
+```
 Условие                       | Реализация
 ------------------------------|--------------------------------------------
 Сеть + subnet + router        | Внутренняя сеть Minikube 192.168.49.0/24
