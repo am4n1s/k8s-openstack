@@ -1,4 +1,6 @@
 ---
 minikube_driver: "docker"
 minikube_cpus: 2
-minikube_memory: "3000mb"
+minikube_memory: "3000"
+minikube_nodes: 3
+minikube_cni: "flannel"
