@@ -5,9 +5,9 @@
 
 ## Архитектура
 
-1 master нода  (minikube)         — control-plane
-2 worker ноды  (minikube-m02/m03) — workloads
-CNI: Flannel   (10.244.0.0/16)
+- 1 master нода  (minikube)         — control-plane
+- 2 worker ноды  (minikube-m02/m03) — workloads
+- CNI: Flannel   (10.244.0.0/16)
 
 ## Требования
 
@@ -19,30 +19,37 @@ CNI: Flannel   (10.244.0.0/16)
 - Минимум 8 GB RAM
 
 ## Установка зависимостей
-
+```
 pip3 install kubernetes --break-system-packages
-ansible-galaxy collection install community.general kubernetes.core
+```
 
+```
+ansible-galaxy collection install community.general kubernetes.core
+```
 ## Как запустить
 
 ### Шаг 1 — Поднять инфраструктуру
+```
 ansible-playbook playbooks/provision.yml
-
+```
 Автоматически запускает Minikube с 3 нодами и Flannel CNI.
 Если кластер остановлен — запустит сам.
 
 ### Шаг 2 — Установить Kubernetes компоненты
+```
 ansible-playbook playbooks/k8s-install.yml
-
+```
 Устанавливает ingress, dashboard, metrics-server, деплоит nginx (2 реплики).
 
 ### Шаг 3 — Проверить кластер
+```
 kubectl get nodes
 kubectl get pods -A
-
+```
 ### Удалить все ресурсы
+```
 ansible-playbook playbooks/cleanup.yml
-
+```
 ## Структура проекта
 ```
 k8s-on-openstack/
@@ -71,16 +78,14 @@ CNI Flannel                   | kube-flannel-ds запущен на каждой
 Инициализация master          | kubeadm init (выполнен Minikube)
 Подключение workers           | kubeadm join (выполнен Minikube)
 
-## Примечание
-
-Задание разработано для реального OpenStack.
-Локально использован Minikube из-за ограничений RAM (8 GB).
-При наличии 16+ GB и реального OpenStack — достаточно заполнить
-credentials в group_vars/all.yml и запустить плейбуки без изменений.
 
 ## Результат после запуска
 
+
+```text
 NAME           STATUS   ROLES           VERSION
 minikube       Ready    control-plane   v1.35.1
 minikube-m02   Ready    <none>          v1.35.1
 minikube-m03   Ready    <none>          v1.35.1
+После запуска обоих плейбуков кластер полностью готов.
+3 ноды в статусе Ready, поды распределены по нодам.
