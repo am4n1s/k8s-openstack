@@ -1,34 +1,51 @@
 ---
 # ============================================================
-# OpenStack (для реального окружения)
+# OpenStack Authentication
 # ============================================================
-os_auth_url:        "http://localhost:5000/v3"
+os_auth_url:        "http://192.168.56.101/identity/v3"
 os_username:        "admin"
 os_password:        "secret"
 os_project_name:    "demo"
+os_user_domain_name:  "Default"
+os_project_domain_name: "Default"
+os_region_name:     "RegionOne"
+
+# ============================================================
+# Network Configuration
+# ============================================================
+network_name:       "k8s-network"
+subnet_name:        "k8s-subnet"
+router_name:        "k8s-router"
+subnet_cidr:        "192.168.100.0/24"
+dns_nameservers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+external_network:   "public"
+
+# ============================================================
+# Security Group
+# ============================================================
+security_group_name: "k8s-secgroup"
+
+# ============================================================
+# VM Configuration
+# ============================================================
+ssh_key_name:       "k8s-keypair"
+ssh_public_key_file: "~/.ssh/id_rsa.pub"
+vm_image:           "cirros-0.6.3-x86_64-disk"
+master_flavor:      "m1.small"
+worker_flavor:      "m1.small"
+master_name:        "k8s-master"
+worker_names:
+  - "k8s-worker-1"
+  - "k8s-worker-2"
 
 # ============================================================
 # Kubernetes
 # ============================================================
-k8s_version:        "1.35.1"
+k8s_version:        "1.29"
 k8s_pod_network_cidr: "10.244.0.0/16"
 cni_plugin:         "flannel"
-
-# ============================================================
-# Minikube (локальная среда)
-# ============================================================
-minikube_driver:    "docker"
-minikube_cpus:      2
-minikube_memory:    "3000"
-minikube_nodes:     3        # 1 master + 2 workers
-minikube_cni:       "flannel"
-
-# ============================================================
-# VM настройки (для реального OpenStack)
-# ============================================================
-master_flavor:      "m1.medium"
-worker_flavor:      "m1.small"
-vm_image:           "Ubuntu-22.04"
-ssh_key_name:       "k8s-keypair"
-master_count:       1
-worker_count:       2
+flannel_manifest_url: "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"
+calico_manifest_url:  "https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml"
+containerd_version: "1.7.*"
